@@ -2,6 +2,7 @@ package com.github.everolfe.paymentservice.config;
 
 import liquibase.command.CommandScope;
 import liquibase.command.CommandResults;
+import liquibase.exception.LiquibaseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -34,7 +35,7 @@ public class LiquibaseConfig {
                                     "@mongo-db:27017/" + database + "?authSource=admin"
                     )
                     .execute();
-        } catch (Exception e) {
+        } catch (LiquibaseException e) {
             throw new RuntimeException(e);
         }
     }

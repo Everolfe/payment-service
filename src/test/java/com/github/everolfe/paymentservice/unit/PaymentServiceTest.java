@@ -40,7 +40,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PaymentServiceTest {
@@ -72,21 +71,22 @@ class PaymentServiceTest {
     @Test
     void test_createPayment_evenExternalApiResponse() {
 
-        Integer EVEN_EXTERNAL_API_RESPONSE = 2;
-        PaymentStatus EXPECTED_PAYMENT_STATUS = PaymentStatus.SUCCESS;
+        final Integer evenExternalApiResponse = 2;
+        final PaymentStatus expectedPaymentStatus = PaymentStatus.SUCCESS;
 
         CreatePaymentDto createPaymentDto = new CreatePaymentDto(
                 1L, 1L, new BigDecimal(1000));
 
         Payment payment = new Payment(
                 null,
-                createPaymentDto.userId(), createPaymentDto.orderId(),
-                LocalDateTime.now(), createPaymentDto.amount(),null);
+                createPaymentDto.userId(),
+                createPaymentDto.orderId(),
+                LocalDateTime.now(),
+                createPaymentDto.amount(),
+                null);
 
         when(createPaymentMapper.toEntity(createPaymentDto)).thenReturn(payment);
-
-        when(randomNumberClient.getRandomNumber()).thenReturn(EVEN_EXTERNAL_API_RESPONSE);
-
+        when(randomNumberClient.getRandomNumber()).thenReturn(evenExternalApiResponse);
         when(paymentRepository.save(any(Payment.class))).thenAnswer(
                 invocation -> {
                     Payment paymentLocal = invocation.getArgument(0);
@@ -124,7 +124,7 @@ class PaymentServiceTest {
 
         GetPaymentDto result = paymentService.createPayment(createPaymentDto);
 
-        assertThat(result.status()).isEqualTo(EXPECTED_PAYMENT_STATUS);
+        assertThat(result.status()).isEqualTo(expectedPaymentStatus);
 
         verify(paymentProducer, times(1)).sendPaymentCreatedEvent(any(PaymentEventDto.class));
     }
@@ -132,21 +132,27 @@ class PaymentServiceTest {
     @Test
     void test_createPayment_oddExternalApiResponse() {
 
-        Integer ODD_EXTERNAL_API_RESPONSE = 1;
-        PaymentStatus EXPECTED_PAYMENT_STATUS = PaymentStatus.FAILED;
+        final Integer oddExternalApiResponse = 1;
+        final PaymentStatus expectedPaymentStatus = PaymentStatus.FAILED;
 
         CreatePaymentDto createPaymentDto = new CreatePaymentDto(
                 1L, 1L, new BigDecimal(1000));
 
         Payment payment = new Payment(
                 null,
-                createPaymentDto.userId(), createPaymentDto.orderId(),
-                LocalDateTime.now(), createPaymentDto.amount(), null);
+                createPaymentDto.userId(),
+                createPaymentDto.orderId(),
+                LocalDateTime.now(),
+                createPaymentDto.amount(),
+                null);
 
         Payment savedPayment = new Payment(
                 "694a6081723088150e7cf74c",
-                createPaymentDto.userId(), createPaymentDto.orderId(),
-                LocalDateTime.now(), createPaymentDto.amount(), PaymentStatus.FAILED);
+                createPaymentDto.userId(),
+                createPaymentDto.orderId(),
+                LocalDateTime.now(),
+                createPaymentDto.amount(),
+                PaymentStatus.FAILED);
 
         PaymentEventDto paymentEventDto = new PaymentEventDto(
                 savedPayment.getId(),
@@ -165,19 +171,16 @@ class PaymentServiceTest {
         );
 
         when(createPaymentMapper.toEntity(createPaymentDto)).thenReturn(payment);
-        when(randomNumberClient.getRandomNumber()).thenReturn(ODD_EXTERNAL_API_RESPONSE);
-
+        when(randomNumberClient.getRandomNumber()).thenReturn(oddExternalApiResponse);
         when(getPaymentEventMapper.toDto(any(Payment.class))).thenReturn(paymentEventDto);
-
         when(getPaymentMapper.toDto(any(Payment.class))).thenReturn(expectedResult);
-
         when(paymentRepository.save(any(Payment.class))).thenReturn(savedPayment);
 
         doNothing().when(paymentProducer).sendPaymentCreatedEvent(any(PaymentEventDto.class));
 
         GetPaymentDto result = paymentService.createPayment(createPaymentDto);
 
-        assertThat(result.status()).isEqualTo(EXPECTED_PAYMENT_STATUS);
+        assertThat(result.status()).isEqualTo(expectedPaymentStatus);
 
         verify(getPaymentEventMapper, times(1)).toDto(any(Payment.class));
         verify(getPaymentMapper, times(1)).toDto(any(Payment.class));
@@ -187,25 +190,30 @@ class PaymentServiceTest {
     @Test
     void test_createPayment_noExternalApiResponse() {
 
-        Integer NO_EXTERNAL_API_RESPONSE = 0;
-        PaymentStatus EXPECTED_PAYMENT_STATUS = PaymentStatus.PENDING;
+        final Integer noExternalApiResponse = 0;
+        final PaymentStatus expectedPaymentStatus = PaymentStatus.PENDING;
 
         CreatePaymentDto createPaymentDto = new CreatePaymentDto(
                 1L, 1L, new BigDecimal(1000));
 
         Payment payment = new Payment(
                 null,
-                createPaymentDto.userId(), createPaymentDto.orderId(),
-                LocalDateTime.now(), createPaymentDto.amount(), null);
+                createPaymentDto.userId(),
+                createPaymentDto.orderId(),
+                LocalDateTime.now(),
+                createPaymentDto.amount(),
+                null);
 
         when(createPaymentMapper.toEntity(createPaymentDto)).thenReturn(payment);
-        when(randomNumberClient.getRandomNumber()).thenReturn(NO_EXTERNAL_API_RESPONSE);
+        when(randomNumberClient.getRandomNumber()).thenReturn(noExternalApiResponse);
 
-        // Create expected saved payment
         Payment savedPayment = new Payment(
                 "694a6081723088150e7cf74c",
-                createPaymentDto.userId(), createPaymentDto.orderId(),
-                LocalDateTime.now(), createPaymentDto.amount(), PaymentStatus.PENDING
+                createPaymentDto.userId(),
+                createPaymentDto.orderId(),
+                LocalDateTime.now(),
+                createPaymentDto.amount(),
+                PaymentStatus.PENDING
         );
 
         PaymentEventDto paymentEventDto = new PaymentEventDto(
@@ -226,13 +234,12 @@ class PaymentServiceTest {
 
         when(getPaymentEventMapper.toDto(any(Payment.class))).thenReturn(paymentEventDto);
         when(getPaymentMapper.toDto(any(Payment.class))).thenReturn(expectedResult);
-
         when(paymentRepository.save(any(Payment.class))).thenReturn(savedPayment);
         doNothing().when(paymentProducer).sendPaymentCreatedEvent(any(PaymentEventDto.class));
 
         GetPaymentDto result = paymentService.createPayment(createPaymentDto);
 
-        assertThat(result.status()).isEqualTo(EXPECTED_PAYMENT_STATUS);
+        assertThat(result.status()).isEqualTo(expectedPaymentStatus);
 
         verify(getPaymentEventMapper, times(1)).toDto(any(Payment.class));
         verify(getPaymentMapper, times(1)).toDto(any(Payment.class));
@@ -280,12 +287,6 @@ class PaymentServiceTest {
         );
 
         Long userIdFromToken = 2L;
-
-        GetPaymentDto getPaymentDto = new GetPaymentDto(
-                payment.getId(),
-                payment.getOrderId(), payment.getUserId(), payment.getStatus(),
-                payment.getTimestamp(), payment.getAmount()
-        );
 
         when(securityHelper.getCurrentUserId()).thenReturn(userIdFromToken);
         when(securityHelper.isAdmin()).thenReturn(false);

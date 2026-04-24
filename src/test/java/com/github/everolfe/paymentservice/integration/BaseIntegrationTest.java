@@ -28,7 +28,7 @@ import org.testcontainers.utility.DockerImageName;
         "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration"
 })
 @ActiveProfiles("test")
-public class BaseIntegrationTest {
+public abstract class BaseIntegrationTest {
 
     @Container
     static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:6.0"))
@@ -38,6 +38,7 @@ public class BaseIntegrationTest {
     static final KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.5.0"))
             .withReuse(true);
 
+    @SuppressWarnings("java:S5738")
     @MockBean
     private JwtDecoder jwtDecoder;
 

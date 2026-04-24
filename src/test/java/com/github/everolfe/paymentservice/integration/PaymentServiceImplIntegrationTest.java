@@ -5,9 +5,7 @@ import com.github.everolfe.paymentservice.dto.CreatePaymentDto;
 import com.github.everolfe.paymentservice.dto.GetPaymentDto;
 import com.github.everolfe.paymentservice.dto.PaymentEventDto;
 import com.github.everolfe.paymentservice.entity.Payment;
-import com.github.everolfe.paymentservice.entity.PaymentStatus;
 import com.github.everolfe.paymentservice.service.PaymentService;
-import com.github.tomakehurst.wiremock.client.WireMock;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -78,7 +76,7 @@ class PaymentServiceImplIntegrationTest extends BaseIntegrationTest {
 
         CreatePaymentDto dto = new CreatePaymentDto(userId, orderId, amount);
 
-        GetPaymentDto result = paymentService.createPayment(dto);
+        paymentService.createPayment(dto);
 
         List<Payment> payments = paymentRepository.findAll();
         assertThat(payments).hasSize(1);
