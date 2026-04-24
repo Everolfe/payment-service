@@ -2,7 +2,6 @@ package com.github.everolfe.paymentservice.integration;
 
 import com.github.everolfe.paymentservice.dao.PaymentRepository;
 import com.github.everolfe.paymentservice.dto.CreatePaymentDto;
-import com.github.everolfe.paymentservice.dto.GetPaymentDto;
 import com.github.everolfe.paymentservice.dto.PaymentEventDto;
 import com.github.everolfe.paymentservice.entity.Payment;
 import com.github.everolfe.paymentservice.service.PaymentService;
@@ -86,10 +85,10 @@ class PaymentServiceImplIntegrationTest extends BaseIntegrationTest {
         assertThat(payment.getUserId()).isEqualTo(userId);
         assertThat(payment.getAmount()).isEqualByComparingTo(amount);
 
-        ConsumerRecord<String, PaymentEventDto> record =
+        ConsumerRecord<String, PaymentEventDto> paymentRecord =
                 KafkaTestUtils.getSingleRecord(testConsumer, "create-payment", Duration.ofSeconds(10));
 
-        PaymentEventDto event = record.value();
+        PaymentEventDto event = paymentRecord.value();
         assertThat(event).isNotNull();
         assertThat(event.orderId()).isEqualTo(orderId);
         assertThat(event.userId()).isEqualTo(userId);

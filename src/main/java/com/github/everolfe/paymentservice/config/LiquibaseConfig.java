@@ -25,7 +25,7 @@ public class LiquibaseConfig {
 
     @Bean
     @ConditionalOnProperty(name = "spring.liquibase.enabled", havingValue = "true", matchIfMissing = false)
-    public CommandResults runLiquibase() {
+    public CommandResults runLiquibase() throws LiquibaseException {
         try {
             return new CommandScope("update")
                     .addArgumentValue("changelogFile", changeLog)
@@ -36,7 +36,7 @@ public class LiquibaseConfig {
                     )
                     .execute();
         } catch (LiquibaseException e) {
-            throw new RuntimeException(e);
+            throw new LiquibaseException(e);
         }
     }
 }
