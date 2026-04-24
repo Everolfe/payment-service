@@ -23,35 +23,34 @@ import org.testcontainers.utility.DockerImageName;
         "ROOT_USERNAME=test_user",
         "ROOT_PASSWORD=test",
         "spring.liquibase.enabled=false",
-        "spring.data.mongodb.host=localhost",
-        "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration,liquibase.ext.mongodb.spring.boot.autoconfigure.LiquibaseMongodbAutoConfiguration"
-        })
+        "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration"
+})
 @ActiveProfiles("test")
 public class BaseIntegrationTest {
 
     @Container
-    static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:6.0"));
+    static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:6.0"))
+            .withReuse(true);
 
     @Container
-    static final KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.5.0"));
+    static final KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.5.0"))
+            .withReuse(true);
 
     @MockBean
     private JwtDecoder jwtDecoder;
 
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
-
         registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
         registry.add("spring.kafka.bootstrap-servers", kafkaContainer::getBootstrapServers);
 
-        registry.add("random.api.url",
-                () -> "http://localhost:${wiremock.server.port}/integers/?num=1&min=1&max=100&col=1&base=10&format=plain&rnd=new");
-
         registry.add("PRODUCER_TOPIC", () -> "create-payment");
         registry.add("GROUP_ID", () -> "payment-service-group");
-
         registry.add("APP_PORT", () -> "8085");
         registry.add("MONGO_URI", mongoDBContainer::getReplicaSetUrl);
         registry.add("BOOTSTRAP_SERVER", kafkaContainer::getBootstrapServers);
+
+        registry.add("spring.kafka.producer.properties.max.block.ms", () -> "10000");
+        registry.add("spring.kafka.consumer.properties.max.poll.interval.ms", () -> "10000");
     }
 }
