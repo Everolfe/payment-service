@@ -3,6 +3,7 @@ package com.github.everolfe.paymentservice.unit;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -514,7 +515,10 @@ class PaymentServiceTest {
         GetPaymentTotalResultDto getPaymentTotalResultDto = new GetPaymentTotalResultDto(
                 total
         );
-        when(paymentRepository.sumPaymentByUserInPeriod(userId,any(LocalDateTime.class),any(LocalDateTime.class))).thenReturn(getPaymentTotalResultDto);
+        when(paymentRepository.sumPaymentByUserInPeriod(
+                eq(userId),
+                any(LocalDateTime.class),
+                any(LocalDateTime.class))).thenReturn(getPaymentTotalResultDto);
         BigDecimal result = paymentService
                 .getAllPaymentTotalResultForCurrentUser(userId,
                         LocalDateTime.now(),LocalDateTime.MAX);
