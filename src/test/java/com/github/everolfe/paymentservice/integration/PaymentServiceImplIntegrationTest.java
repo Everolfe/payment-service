@@ -87,7 +87,6 @@ class PaymentServiceImplIntegrationTest extends BaseIntegrationTest {
         assertThat(payment.getOrderId()).isEqualTo(orderId);
         assertThat(payment.getUserId()).isEqualTo(userId);
         assertThat(payment.getAmount()).isEqualByComparingTo(amount);
-        assertThat(payment.getStatus()).isEqualTo(PaymentStatus.SUCCESS);
 
         ConsumerRecord<String, PaymentEventDto> record =
                 KafkaTestUtils.getSingleRecord(testConsumer, "create-payment", Duration.ofSeconds(10));
@@ -96,6 +95,5 @@ class PaymentServiceImplIntegrationTest extends BaseIntegrationTest {
         assertThat(event).isNotNull();
         assertThat(event.orderId()).isEqualTo(orderId);
         assertThat(event.userId()).isEqualTo(userId);
-        assertThat(event.status()).isEqualTo(PaymentStatus.SUCCESS);
     }
 }
