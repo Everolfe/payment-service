@@ -24,7 +24,7 @@ import org.testcontainers.utility.DockerImageName;
         "ROOT_PASSWORD=test",
         "spring.liquibase.enabled=false",
         "spring.data.mongodb.host=localhost",
-        "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration"
+        "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration,liquibase.ext.mongodb.spring.boot.autoconfigure.LiquibaseMongodbAutoConfiguration"
         })
 @ActiveProfiles("test")
 public class BaseIntegrationTest {

@@ -514,7 +514,7 @@ class PaymentServiceTest {
         GetPaymentTotalResultDto getPaymentTotalResultDto = new GetPaymentTotalResultDto(
                 total
         );
-        when(paymentRepository.sumPaymentByUserInPeriod(userId,LocalDateTime.now(),LocalDateTime.MAX)).thenReturn(getPaymentTotalResultDto);
+        when(paymentRepository.sumPaymentByUserInPeriod(userId,any(LocalDateTime.class),any(LocalDateTime.class))).thenReturn(getPaymentTotalResultDto);
         BigDecimal result = paymentService
                 .getAllPaymentTotalResultForCurrentUser(userId,
                         LocalDateTime.now(),LocalDateTime.MAX);
