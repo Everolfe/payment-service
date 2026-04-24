@@ -42,6 +42,8 @@
 			**/com/github/everolfe/paymentservice/mapper/**,
 			**/com/github/everolfe/paymentservice/security/**,
 			**/com/github/everolfe/paymentservice/dto/**,
+			**/com/github/everolfe/paymentservice/exception/**,
+			**/com/github/everolfe/paymentservice/service/event/**,
 			**/com/github/everolfe/paymentservice/controller/**,
 			**/com/github/everolfe/paymentservice/client/**,
 		</sonar.coverage.exclusions>
