@@ -23,6 +23,7 @@ import org.testcontainers.utility.DockerImageName;
 @TestPropertySource(properties = {
         "ROOT_USERNAME=test_user",
         "ROOT_PASSWORD=test",
+        "DB_NAME=payment_db",
         "spring.liquibase.enabled=false",
         "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration"
 })
