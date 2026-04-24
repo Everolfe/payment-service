@@ -39,7 +39,7 @@ class PaymentServiceImplIntegrationTest extends BaseIntegrationTest {
     @BeforeEach
     void setup() {
 
-        stubFor(WireMock.get(urlPathMatching("/integers/.*"))
+        stubFor(any(anyUrl())
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withBody("42"))); // SUCCESS
