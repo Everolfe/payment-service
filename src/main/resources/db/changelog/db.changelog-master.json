@@ -1,0 +1,14 @@
+{
+  "databaseChangeLog": [
+    {
+      "include": {
+        "file": "db/changelog/V1.0/220426-create-payment-collection.json"
+      }
+    },
+    {
+      "include": {
+        "file": "db/changelog/V1.0/220426-create-indexes.json"
+      }
+    }
+  ]
+}

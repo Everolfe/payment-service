@@ -1,0 +1,26 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "220426-2",
+        "author": "payment-service",
+        "changes": [
+          {
+            "createIndex": {
+              "collectionName": "payments",
+              "keys": "{ \"order_id\": 1}",
+              "options": "{\"name\": \"idx_payment_order_id\"}"
+            }
+          },
+          {
+            "createIndex": {
+              "collectionName": "payments",
+              "keys": "{ \"user_id\": 1}",
+              "options": "{\"name\": \"idx_payment_user_id\"}"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

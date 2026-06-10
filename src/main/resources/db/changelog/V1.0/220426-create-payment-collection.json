@@ -1,0 +1,53 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "220426-1",
+        "author": "payment-service",
+        "changes": [
+          {
+            "createCollection": {
+              "collectionName": "payments",
+              "options": {
+                "validator": {
+                  "$jsonSchema": {
+                    "bsonType": "object",
+                    "required": ["user_id","order_id","status","amount"],
+                    "properties": {
+                      "_id": {
+                        "bsonType": "string",
+                        "description": "must be a string and is required"
+                      },
+                      "user_id": {
+                        "bsonType": "long",
+                        "description": "must be a long and is required"
+                      },
+                      "order_id": {
+                        "bsonType": "long",
+                        "description": "must be a long and is required"
+                      },
+                      "status": {
+                        "enum": ["PENDING", "SUCCESS", "FAILED"],
+                        "description": "must be one of the enum values and is required"
+                      },
+                      "timestamp": {
+                        "bsonType": "date",
+                        "description": "must be a date"
+                      },
+                      "amount": {
+                        "bsonType": "decimal",
+                        "description": "must be a decimal and is required"
+                      }
+                    }
+                  }
+                },
+                "validationLevel": "strict",
+                "validationAction": "error"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
